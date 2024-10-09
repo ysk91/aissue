@@ -16,6 +16,19 @@ If bundler is not being used to manage dependencies, install the gem by executin
 
     $ gem install UPDATE_WITH_YOUR_GEM_NAME_PRIOR_TO_RELEASE_TO_RUBYGEMS_ORG
 
+### .env
+
+Create a `.env` file in the root of the project and add the following:
+
+```
+OPENAI_API_KEY=sk-xxx
+GPT_MODEL=gpt-4o-mini
+
+GITHUB_TOKEN=ghp_xxx
+GITHUB_OWNER=your-github-username
+REPOSITORY=your-repository-name
+```
+
 ## Usage
 
 TODO: Write usage instructions here
