@@ -46,7 +46,7 @@ module Aissue
     end
 
     # GitHub API
-    def get_file_contents(path, base_path = nil)
+    def get_file_contents(path, base_path: nil)
       full_path = base_path ? "#{base_path}/#{path}" : path
 
       begin
@@ -65,6 +65,21 @@ module Aissue
     def create_issue(title, body)
       issue = Aissue.client.create_issue(Aissue.repository, title, body)
       puts "Issue created: #{issue[:html_url]}"
+    end
+
+    def record_issue(purpose, ruby_code, script_path: nil)
+      issue_title = purpose
+      issue_body = <<~BODY
+        ## 対象スクリプト
+        #{script_path}
+
+        ## 実装コード
+        ```ruby
+        #{ruby_code}
+        ```
+      BODY
+
+      create_issue(issue_title, issue_body)
     end
   end
 end

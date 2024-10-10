@@ -5,21 +5,6 @@ module Aissue
 
   class Issue
     class << self
-      def record(purpose, ruby_code, script_path: nil)
-        issue_title = purpose
-        issue_body = <<~BODY
-          ## 対象スクリプト
-          #{script_path}
-
-          ## 実装コード
-          ```ruby
-          #{ruby_code}
-          ```
-        BODY
-
-        create_issue(issue_title, issue_body)
-      end
-
       def rescue(e)
         repo_root = Dir.pwd
         error_details = e.backtrace.map do |line|
