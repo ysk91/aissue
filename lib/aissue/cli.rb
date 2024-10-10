@@ -1,7 +1,6 @@
 require 'thor'
 require 'dotenv/load'
 require_relative 'util'
-require_relative 'issue'
 
 module Aissue
   class CLI < Thor
@@ -68,19 +67,8 @@ module Aissue
       is_record_issue = $stdin.gets.chomp
 
       if ["Y", "YES"].include?(is_record_issue.upcase)
-        Aissue::Issue.record(purpose, ruby_code, script_path: script_path)
+        record_issue(purpose, ruby_code, script_path: script_path)
       end
-    end
-
-    desc "test", "Test the Aissue CLI"
-    def test
-      purpose = 'Test: Aissue::CLI#test'
-      ruby_code = 'This is a test code.'
-      script_path = 'lib/aissue/version.rb'
-
-      # Aissue::Issue.record(purpose, ruby_code, script_path: script_path)
-      # puts get_file_contents(script_path) #  実行可能
-      Aissue::Issue.test # 実行可能
     end
   end
 end

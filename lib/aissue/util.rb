@@ -66,5 +66,20 @@ module Aissue
       issue = Aissue.client.create_issue(Aissue.repository, title, body)
       puts "Issue created: #{issue[:html_url]}"
     end
+
+    def record_issue(purpose, ruby_code, script_path: nil)
+      issue_title = purpose
+      issue_body = <<~BODY
+        ## 対象スクリプト
+        #{script_path}
+
+        ## 実装コード
+        ```ruby
+        #{ruby_code}
+        ```
+      BODY
+
+      create_issue(issue_title, issue_body)
+    end
   end
 end
