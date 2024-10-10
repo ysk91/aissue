@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+
+require 'aissue'
+
+chmod +x bin/aissue
+
+Aissue::CLI.start
