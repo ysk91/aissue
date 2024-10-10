@@ -46,7 +46,7 @@ module Aissue
     end
 
     # GitHub API
-    def get_file_contents(path, base_path = nil)
+    def get_file_contents(path, base_path: nil)
       full_path = base_path ? "#{base_path}/#{path}" : path
 
       begin

@@ -1,7 +1,5 @@
 #!/usr/bin/env ruby
 
-require 'aissue'
-
-chmod +x bin/aissue
+require_relative '../lib/aissue/cli'
 
 Aissue::CLI.start
