@@ -36,52 +36,59 @@ module Aissue
           get_file_contents(error_script_path)
         end
 
-        prompt = <<~PROMPT
-          [命令]
-          [エラー内容]を解析し、原因と改善策を<<comment>>に記述してください。
-          <<comment>>の内容を簡単にまとめ、<<title>>としてください。
-          結果をJSON形式で出力してください。
-          JSONに含める項目は[出力項目]の通りです。
+        lang = ENV['AISSUE_LANG'] || '日本語'
 
-          [<<comment>>の形式]
-          ## 発生エラー
+        prompt = <<~PROMPT
+          [Instructions]
+          Analyze the [Error Details], describe the cause and corrective actions in <<comment>>.
+          Summarize the contents of <<comment>> and use it as <<title>>.
+          Output the results in JSON format.
+          Include items in the JSON according to [Output Items].
+
+          [Format of <<comment>>]
+          ## Error Occurrence
           ```
           #{error_details}
           ```
-          (発生したエラーについて説明)
+          (Describe the occurred error)
 
-          ## 原因
-          (エラーについて、発生箇所と原因を説明
-          特に、本エラーは[エラー発生箇所]を実行した際に発生したものです。
-          このスクリプト内で、[エラー内容]が発生する箇所を特定しつつ、[モジュール]が原因である可能性も考慮してください)
+          ## Cause
+          (Explain the location and cause of the error
+          Particularly, this error occurred when executing [Error Location].
+          Within this script, while identifying where [Error Details] occurs, also consider the possibility that the [Module] might be the cause.)
 
-          ## 改善策
-          (エラーを解消するために、どのファイルに対してどのような修正を行うべきかを記述)
+          ## Corrective Actions
+          (Describe what kind of corrections should be made to which file to resolve the error)
 
-          ### 対象ファイル
-          （修正すべきファイルのパスを記載）
+          ### Target File
+          (Specify the path of the file to be corrected)
 
-          ### 修正内容
-          （修正後のコードを記載）
+          ### Correction Content
+          (Describe the corrected code)
 
-          [出力項目]
+          [Output Items]
           title: <<title>>
           comment: <<comment>>
 
-          [エラー内容]
+          [Error Details]
           "#{e.class}: #{e.message}"
 
-          [エラー発生箇所]
+          [Error Location]
           #{error_details[-1]}
 
-          [モジュール]
+          [Module]
           #{error_scripts}
+
+          [output language]
+          #{lang}
         PROMPT
 
         response = post_openai(prompt, json: true)
         title = response["title"]
         body = response["comment"]
-        create_issue(title, body)
+        # create_issue(title, body)
+        puts "Title: #{title}"
+        puts "Body: #{body}"
       end
     end
   end
