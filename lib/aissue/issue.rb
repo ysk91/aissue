@@ -1,5 +1,4 @@
-$LOAD_PATH.unshift(File.expand_path('../', __dir__))
-require 'aissue/util'
+require_relative 'util'
 
 module Aissue
   include Aissue::Util
@@ -86,9 +85,7 @@ module Aissue
         response = post_openai(prompt, json: true)
         title = response["title"]
         body = response["comment"]
-        # create_issue(title, body)
-        puts "Title: #{title}"
-        puts "Body: #{body}"
+        create_issue(title, body)
       end
     end
   end
