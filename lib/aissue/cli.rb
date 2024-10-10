@@ -17,7 +17,7 @@ module Aissue
       print "対象スクリプトのパスを入力してください: "
       script_path = $stdin.gets.chomp
 
-      script = get_file_contents(script_path) unless script_path.empty?
+      script = get_file_contents(script_path)
 
       lang = ENV['AISSUE_LANG'] || '日本語'
 
@@ -49,12 +49,11 @@ module Aissue
       ruby_code = post_openai(prompt, json: false)
       puts ruby_code
 
-      if script_path.empty?
+      if script.nil?
         print "このコードを実行しますか？(y/n): "
         is_execute = $stdin.gets.chomp
 
         if ["Y", "YES"].include?(is_execute.upcase)
-          exec_globals = {}
           eval(ruby_code, binding, __FILE__, __LINE__)
           result = binding.local_variable_get(:result)
           p result
