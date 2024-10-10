@@ -8,7 +8,7 @@ require 'octokit'
 module Aissue
   class << self
     def client
-      @client ||= Octokit::Client.new(access_token: ENV['ACCESS_TOKEN'])
+      @client ||= Octokit::Client.new(access_token: ENV['GITHUB_TOKEN'])
     end
 
     def repository
@@ -37,7 +37,12 @@ module Aissue
         http.request(request)
       end
 
-      JSON.parse(response.body)
+      response_body = JSON.parse(response.body)
+      content = response_body["choices"][0]["message"]["content"] if response_body
+
+      if content
+        json ? JSON.parse(content) : content
+      end
     end
 
     # GitHub API
