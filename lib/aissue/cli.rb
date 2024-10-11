@@ -8,13 +8,13 @@ module Aissue
 
     desc "start", "Start the Aissue CLI"
     def start
-      print "目的を入力してください: "
+      print "Please enter your requirements: "
       purpose = $stdin.gets.chomp
 
-      print "データを入力してください: "
+      print "Please enter the relevant data: "
       data = $stdin.gets.chomp
 
-      print "対象スクリプトのパスを入力してください: "
+      print "Please enter the path of the target script: "
       script_path = $stdin.gets.chomp
 
       script = get_file_contents(script_path)
@@ -50,7 +50,7 @@ module Aissue
       puts ruby_code
 
       if script.nil?
-        print "このコードを実行しますか？(y/n): "
+        print "Do you want to run this code?(y/n): "
         is_execute = $stdin.gets.chomp
 
         if ["Y", "YES"].include?(is_execute.upcase)
@@ -58,15 +58,15 @@ module Aissue
           result = binding.local_variable_get(:result)
           p result
         else
-          puts "処理を終了します。"
+          puts "Finished without execution."
         end
       end
 
-      print "このコードをGitHub Issueに記録しますか？(y/n): "
+      print "Would you like to record this code in a GitHub Issue?(y/n): "
       is_record_issue = $stdin.gets.chomp
 
       if ["Y", "YES"].include?(is_record_issue.upcase)
-        record_issue(purpose, ruby_code, script_path: script_path)
+        puts record_issue(purpose, ruby_code, script_path: script_path)
       end
     end
   end
