@@ -54,17 +54,15 @@ module Aissue
         decoded_content = Base64.decode64(file_content[:content]).force_encoding('UTF-8')
         { full_path => decoded_content }
       rescue Octokit::NotFound
-        puts "Skipping #{full_path} (not found in repo)"
         nil
       rescue => e
-        puts "Error retrieving #{full_path}: #{e}"
         nil
       end
     end
 
     def create_issue(title, body)
       issue = Aissue.client.create_issue(Aissue.repository, title, body)
-      puts "Issue created: #{issue[:html_url]}"
+      return issue[:html_url]
     end
 
     def record_issue(purpose, ruby_code, script_path: nil)
