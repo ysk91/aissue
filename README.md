@@ -54,7 +54,7 @@ For example, you can use it as follows:
 ```ruby
 begin
   100 / 0 # Process where an error might occur
-rescue
+rescue => e
   Aissue::Issue.rescue(e)
 end
 ```
