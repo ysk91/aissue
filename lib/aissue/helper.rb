@@ -16,7 +16,10 @@ module Aissue
     end
   end
 
-  module Util
+  module Helper
+
+    private
+
     # OpenAI API
     def post_openai(prompt, model: ENV['GPT_MODEL'], temperature: 0.7, json: false)
       data = {

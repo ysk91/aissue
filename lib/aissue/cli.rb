@@ -1,10 +1,10 @@
 require 'thor'
 require 'dotenv/load'
-require_relative 'util'
+require_relative 'helper'
 
 module Aissue
   class CLI < Thor
-    include Aissue::Util
+    include Aissue::Helper
 
     desc "start", "Start the Aissue CLI"
     def start

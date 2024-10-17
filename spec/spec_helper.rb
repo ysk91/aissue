@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 require "aissue"
+require "aissue/helper"
+require "aissue/cli"
+require "aissue/issue"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
