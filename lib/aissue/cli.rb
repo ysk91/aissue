@@ -4,7 +4,7 @@ require_relative 'helper'
 
 module Aissue
   class CLI < Thor
-    extend Aissue::Helper
+    include Aissue::Helper
 
     desc "start", "Start the Aissue CLI"
     def start
