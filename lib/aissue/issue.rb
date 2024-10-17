@@ -1,9 +1,9 @@
-require_relative 'util'
+require_relative 'helper'
 
 module Aissue
-  include Aissue::Util
-
   class Issue
+    extend Aissue::Helper
+
     class << self
       def rescue(e)
         repo_root = Dir.pwd
