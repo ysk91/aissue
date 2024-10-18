@@ -1,11 +1,15 @@
 # Aissue
 
+日本語訳: https://qiita.com/ysk91_engineer/items/18127af3d2bd25645593
+
 Aissue is a tool that utilizes generative AI to provide a code creation CLI and a feature to log the causes and solutions of errors as issues.
 
 By using the Aissue gem, you gain the following two benefits:
 
 - Speed up handling of issues by checking the causes and solutions in the issues logged.
 - Increase development speed by referencing automatically generated code.
+
+RubyGem: https://rubygems.org/gems/aissue
 
 ## Installation
 
@@ -113,95 +117,37 @@ While it does not affect usage, if you know of a better approach, we welcome you
 **with target script**
 
 ```shell
-% aissue start
-Please enter your requirements: post_openaiの引数からjsonを削除し、常にJSONモードで使用したい
+aissue_test % aissue start
+Please enter your requirements: クラス化し、内部の処理を関数化。引数を分母にする
 Please enter the relevant data:
-Please enter the path of the target script: lib/aissue/util.rb
-require 'net/http'
-require 'uri'
-require 'json'
-require 'base64'
-require 'dotenv/load'
-require 'octokit'
+Please enter the path of the target script: test.rb
+class Division
+  def initialize(numerator)
+    @numerator = numerator
+  end
 
-module Aissue
-  class << self
-    def client
-      @client ||= Octokit::Client.new(access_token: ENV['GITHUB_TOKEN'])
-    end
-
-    def repository
-      ENV['GITHUB_OWNER'] + '/' + ENV['REPOSITORY']
+  def divide(denominator)
+    puts 'ゼロ除算します'
+    begin
+      @numerator / denominator
+    rescue ZeroDivisionError => e
+      handle_error(e)
     end
   end
 
-  module Util
-    # OpenAI API
-    def post_openai(prompt, model: ENV['GPT_MODEL'], temperature: 0.7)
-      data = {
-        model: model,
-        messages: [{"role" => "user", "content" => prompt}],
-        temperature: temperature
-      }
+  private
 
-      data["response_format"] = {"type" => "json_object"}
-
-      uri = URI.parse("https://api.openai.com/v1/chat/completions")
-      request = Net::HTTP::Post.new(uri)
-      request.content_type = "application/json"
-      request['Authorization'] = "Bearer #{ENV['OPENAI_API_KEY']}"
-      request.body = data.to_json
-
-      response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
-        http.request(request)
-      end
-
-      response_body = JSON.parse(response.body)
-      content = response_body["choices"][0]["message"]["content"] if response_body
-
-      content if content
-    end
-
-    # GitHub API
-    def get_file_contents(path, base_path: nil)
-      full_path = base_path ? "#{base_path}/#{path}" : path
-
-      begin
-        file_content = Aissue.client.contents(Aissue.repository, path: full_path)
-        decoded_content = Base64.decode64(file_content[:content]).force_encoding('UTF-8')
-        { full_path => decoded_content }
-      rescue Octokit::NotFound
-        puts "Skipping #{full_path} (not found in repo)"
-        nil
-      rescue => e
-        puts "Error retrieving #{full_path}: #{e}"
-        nil
-      end
-    end
-
-    def create_issue(title, body)
-      issue = Aissue.client.create_issue(Aissue.repository, title, body)
-      puts "Issue created: #{issue[:html_url]}"
-    end
-
-    def record_issue(purpose, ruby_code, script_path: nil)
-      issue_title = purpose
-      issue_body = <<~BODY
-        ## 対象スクリプト
-        #{script_path}
-
-        ## 実装コード
-        ```ruby
-        #{ruby_code}
-        ```
-      BODY
-
-      create_issue(issue_title, issue_body)
-    end
+  def handle_error(exception)
+    # エラーハンドリングの処理をここに記述
+    "エラーが発生しました: #{exception.message}"
   end
 end
+
+division = Division.new(100)
+result = division.divide(0)
+result
 Would you like to record this code in a GitHub Issue?(y/n): y
-https://github.com/ysk91/aissue/issues/11
+https://github.com/ysk91/aissue_test/issues/4
 ```
 
 For those of you using AI for programming, you might already know that it can be risky to take the generated code at face value.
@@ -209,13 +155,17 @@ Please make sure to review the code thoroughly before implementing it.
 
 ## Development
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+- Ruby version >= 2.6.0
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+```
+git clone git@github.com:ysk91/aissue.git
+bundle install
+bundle exec bin/aissue start
+```
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/ysk91/aissue. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/[USERNAME]/aissue/blob/main/CODE_OF_CONDUCT.md).
+Bug reports and pull requests are welcome on GitHub at https://github.com/ysk91/aissue. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/ysk91/aissue/blob/main/CODE_OF_CONDUCT.md).
 
 ## License
 
